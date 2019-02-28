@@ -1,0 +1,45 @@
+# depslib dependency file v1.0
+1551293022 source:c:\users\juan9\desktop\tareas inco pc\6to semestre\03 estructura de datos ii\01 entregable - léxico\analizadorlexico.cpp
+	<cstring>
+	"AnalizadorLexico.h"
+	"regex"
+
+1551288668 c:\users\juan9\desktop\tareas inco pc\6to semestre\03 estructura de datos ii\01 entregable - léxico\analizadorlexico.h
+	<iostream>
+	<fstream>
+	"collection.h"
+	"Lexico.h"
+	"Tools.h"
+	"variable.h"
+
+1548189653 c:\users\juan9\desktop\tareas inco pc\6to semestre\03 estructura de datos ii\01 entregable - léxico\collection.h
+	<exception>
+	<iostream>
+	<cstring>
+
+1548171986 c:\users\juan9\desktop\tareas inco pc\6to semestre\03 estructura de datos ii\01 entregable - léxico\lexico.h
+	<iostream>
+	<cstring>
+
+1526933364 c:\users\juan9\desktop\tareas inco pc\6to semestre\03 estructura de datos ii\01 entregable - léxico\tools.h
+	<iostream>
+	<cstdlib>
+	<cstring>
+
+1551249125 c:\users\juan9\desktop\tareas inco pc\6to semestre\03 estructura de datos ii\01 entregable - léxico\variable.h
+	<iostream>
+	<cstring>
+
+1548172032 source:c:\users\juan9\desktop\tareas inco pc\6to semestre\03 estructura de datos ii\01 entregable - léxico\lexico.cpp
+	"lexico.h"
+
+1548205576 source:c:\users\juan9\desktop\tareas inco pc\6to semestre\03 estructura de datos ii\01 entregable - léxico\main.cpp
+	<iostream>
+	"AnalizadorLexico.h"
+
+1526933374 source:c:\users\juan9\desktop\tareas inco pc\6to semestre\03 estructura de datos ii\01 entregable - léxico\tools.cpp
+	"Tools.h"
+
+1551249182 source:c:\users\juan9\desktop\tareas inco pc\6to semestre\03 estructura de datos ii\01 entregable - léxico\variable.cpp
+	"variable.h"
+
