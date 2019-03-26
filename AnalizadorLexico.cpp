@@ -7,6 +7,8 @@
 
 using namespace std;
 
+typedef enum{Q1=1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10,Q11,Q12,Q13,Q14,Q15,Q16,Q17,Q18,Q19,Q20,Q21,Q22,Q23} QAnalize;
+
 AnalizadorLexico::AnalizadorLexico() {
     listData = new Collection<Lexico>;
     listError = new Collection<std::string>;
@@ -146,7 +148,7 @@ void AnalizadorLexico::analizeString() {
             default:
                 cout <<"Error"<< endl;
                 //exit = true;
-			}
+            }
         i++;
         }
     while(!exit);
@@ -162,6 +164,7 @@ void AnalizadorLexico::analizeString() {
     if(startSintactico && !isCorrect) {
         cout <<report<< endl;
         }
+    //cout <<"-------------------------------"<< endl;
     }
 
 void AnalizadorLexico::analizeGeneral(std::string& aux) {
@@ -169,6 +172,7 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
     Collection<Variable>* stackVariable = new Collection<Variable>;
     Variable variable;
     string sentence;
+    string auxVariable;
     bool exit = false;
     bool isCorrect = true;
     int qActual = 0;
@@ -223,8 +227,9 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                         stackCharacter->pop();
                         }
                     else {
-                        cout <<"Setting false"<< endl;
-                        isCorrect = false;
+                        //cout <<"Setting false"<< endl;
+                        //isCorrect = false;
+                        listError->insertData("Error, falta un '}'");
                         }
                     }
                 else if(aux[i] == '\0') {
@@ -295,6 +300,7 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                         }
                     else if(sentence == "FOR") {
                         i=analizeFOR(aux,i);
+                        cout <<"Después del FOR el I está en: '"<<aux[i]<<"' '"<<(int)aux[i]<<"' i="<<i<< endl;
                         if(aux[i] == '{') {
                             stackCharacter->push('{');
                             }
@@ -303,6 +309,7 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                             isCorrect = false;
                             i--;
                             }
+                        
                         qActual = 2;
                         }
                     else if(sentence == "END") {
@@ -310,7 +317,6 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                         cout <<"Tope character = "<<stackCharacter->getTop()<< endl;
                         if(stackCharacter->getTop() != '°') {
                             isCorrect = false;
-
                             }
                         exit = true;
                         }
@@ -318,11 +324,15 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                         qActual = 6;
                         i--;
                         }
-					else if(sentence == "AIN") {
-						qActual = 10;
-						i--;
-					}
+                    else if(sentence == "AIN") {
+                        qActual = 10;
+                        i--;
+                        }
                     else if(stackVariable->findData(variable) == nullptr) {
+                        auxVariable=variable.getName();
+                        if(isVariable(auxVariable)){
+                            listError->insertData("Error, la palabra : '"+variable.getName()+"' no es una variable");
+                        }
                         listError->insertData("Error, la variable : '"+variable.getName()+"' no ha sido declarada");
                         qActual = 2;
                         }
@@ -344,23 +354,30 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                 break;
             case 7:
                 cout <<"Case 7 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
-                if(aux[i] != '"') {
-                    listError->insertData("Error, se esperaba un '\"' en 'AOUT'");
+                if(aux[i] == '"') {
+                    qActual = 8;
                     }
+                else if(isdigit((int)aux[i])){
+                    qActual = 21;
+                }
+                else{
+                    listError->insertData("Error, se esperaba un '\"' en 'AOUT'");
+                }
                 qActual = 8;
                 break;
             case 8:
                 cout <<"Case 8 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
-                if(aux[i] == '\0'){
+                if(aux[i] == '\0') {
                     listError->insertData("Error, se esperaba un '\"' en 'AOUT'");
                     exit = true;
-                }
+                    }
                 if(aux[i] != '"') {
+                    sentence+=aux[i];
                     qActual = 8;
                     }
-                else{
+                else {
                     qActual = 9;
-                }
+                    }
                 break;
             case 9:
                 cout <<"Case 9 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
@@ -369,124 +386,156 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                     }
                 qActual = 2;
                 break;
-			case 10:  /// /////////// Validando el > en AIN //////////////////
-				cout <<"Case 10 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
-				if(aux[i] != '>'){
-					listError->insertData("Error, se esperaba un '>' en 'AIN'");
-				}
-				qActual = 11;
-				break;
-			case 11:
-				cout <<"Case 11 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
-				if(aux[i] == '"'){
+            case 10:  /// /////////// Validando el > en AIN //////////////////
+                cout <<"Case 10 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
+                if(aux[i] != '>') {
+                    listError->insertData("Error, se esperaba un '>' en 'AIN'");
+                    }
+                qActual = 11;
+                break;
+            case 11:
+                cout <<"Case 11 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
+                if(aux[i] == '"') {
                     qActual = 12;
-				}
-				else if(aux[i] == '\''){
-					qActual = 13;
-				}
-				else{
-					listError->insertData("Error, se esperana un '\'' o un '\"' en 'AIN'");
-					qActual = 14;
-				}
-				break;
-			case 12:
-				cout <<"Case 12 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
-				if(aux[i] != '"'){
-					sentence+=aux[i];
-					qActual = 12;
-				}
-				else{
-					variable.setName(sentence);
-					if(stackVariable->findData(variable) == nullptr){
-						listError->insertData("Error, la variable '"+variable.getName()+"' no ha sido previamente declarada");
-					}
-					sentence="";
+                    }
+                else if(aux[i] == '\'') {
+                    qActual = 13;
+                    }
+                else if(isdigit((int)aux[i] || isalpha((int)aux[i]))){
+                    qActual = 22;
+                    }
+                else {
+                    listError->insertData("Error, se esperana un '\'' o un '\"' en 'AIN'");
                     qActual = 14;
-				}
-				break;
-			case 13:
-				cout <<"Case 13 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
-				if(aux[i] != '\''){
-					qActual = 13;
-				}
-				else{
-					variable.setName(sentence);
-					if(stackVariable->findData(variable) == nullptr){
-						listError->insertData("Error, la variable '"+variable.getName()+"' no ha sido previamente declarada");
-					}
-					sentence="";
-					qActual = 14;
-				}
-				break;
-			case 14:
+                    }
+                break;
+            case 12:
+                cout <<"Case 12 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
+                if(aux[i] != '"') {
+                    sentence+=aux[i];
+                    qActual = 12;
+                    }
+                else {
+                    variable.setName(sentence);
+                    if(stackVariable->findData(variable) == nullptr) {
+                        listError->insertData("Error, la variable '"+variable.getName()+"' no ha sido previamente declarada");
+                        }
+                    sentence="";
+                    qActual = 14;
+                    }
+                break;
+            case 13:
+                cout <<"Case 13 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
+                if(aux[i] != '\'') {
+                    qActual = 13;
+                    }
+                else {
+                    variable.setName(sentence);
+                    if(stackVariable->findData(variable) == nullptr) {
+                        listError->insertData("Error, la variable '"+variable.getName()+"' no ha sido previamente declarada");
+                        }
+                    sentence="";
+                    qActual = 14;
+                    }
+                break;
+            case 14:
                 cout <<"Case 14 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
-                if(aux[i] != ';'){
-					listError->insertData("Error, se esperaba un ';' en 'AIN'");
-                }
+                if(aux[i] != ';') {
+                    listError->insertData("Error, se esperaba un ';' en 'AIN'");
+                    }
                 qActual = 2;
                 break;
-			case 15:
-				cout <<"Case 15 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
-				if(aux[i] != '='){
-					qActual=15;
-					sentence+=aux[i];
-				}
-				else{
-					qActual = 16;
-					variable.setName(sentence);
-					if(stackVariable->findData(variable) == nullptr){
-						listError->insertData("Error, la variable '"+variable.getName()+"' no ha sido previamente declarada");
-					}
-					sentence="";
-				}
-				break;
-			case 16:
-				cout <<"Case 16 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
-				if(aux[i] != '+' && aux[i] != '-' && aux[i] != '/' && aux[i] != '*'){
-					qActual=16;
-					sentence+=aux[i];
-				}
-				else{
-					qActual = 17;
-					variable.setName(sentence);
-					if(stackVariable->findData(variable) == nullptr){
-						listError->insertData("Error, la variable '"+variable.getName()+"' no ha sido previamente declarada");
-					}
-					sentence="";
-				}
-				break;
-			case 17:
-				cout <<"Case 17 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
-				if(aux[i] != ';'){
-					qActual=17;
-					sentence+=aux[i];
-				}
-				else{
-					qActual = 2;
-					variable.setName(sentence);
-					if(stackVariable->findData(variable) == nullptr){
-						listError->insertData("Error, la variable '"+variable.getName()+"' no ha sido previamente declarada");
-					}
-					sentence="";
-				}
-			case 20:
+            case 22:
+                cout <<"Case 22 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
+                if(isalpha((int)aux[i]) || isdigit((int)aux[i])) {
+                    sentence+=aux[i];
+                    qActual = 22;
+                    }
+                else {
+                    variable.setName(sentence);
+                    if(stackVariable->findData(variable) == nullptr) {
+                        listError->insertData("Error, la variable '"+variable.getName()+"' no ha sido previamente declarada");
+                        }
+                    sentence="";
+                    qActual = 14;
+                    }
+                break;
+            case 15:
+                cout <<"Case 15 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
+                if(aux[i] != '=') {
+                    qActual=15;
+                    sentence+=aux[i];
+                    }
+                else {
+                    qActual = 16;
+                    variable.setName(sentence);
+                    if(stackVariable->findData(variable) == nullptr) {
+                        listError->insertData("Error, la variable '"+variable.getName()+"' no ha sido previamente declarada");
+                        }
+                    sentence="";
+                    }
+                break;
+            case 16:
+                cout <<"Case 16 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
+                if(aux[i] != '+' && aux[i] != '-' && aux[i] != '/' && aux[i] != '*') {
+                    qActual=16;
+                    sentence+=aux[i];
+                    }
+                else {
+                    qActual = 17;
+                    variable.setName(sentence);
+                    if(stackVariable->findData(variable) == nullptr) {
+                        listError->insertData("Error, la variable '"+variable.getName()+"' no ha sido previamente declarada");
+                        }
+                    sentence="";
+                    }
+                break;
+            case 17:
+                cout <<"Case 17 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
+                if(aux[i] != ';') {
+                    qActual=17;
+                    sentence+=aux[i];
+                    }
+                else {
+                    qActual = 2;
+                    variable.setName(sentence);
+                    if(stackVariable->findData(variable) == nullptr) {
+                        listError->insertData("Error, la variable '"+variable.getName()+"' no ha sido previamente declarada");
+                        }
+                    sentence="";
+                    }
+            case 20:  /// De error
                 cout <<"Case 20 con '"<<aux[i]<<"' llegando"<< endl;
                 exit = true;
                 cout <<"Error, : "<< endl;
                 break;
+            case 21:
+                if(isdigit((int)aux[i])){
+                    qActual = 21;
+                    }
+                else if(aux[i] == ';'){
+                    qActual = 2;
+                }
+                else{
+                    listError->insertData("Error, se esperaba un ';' en AOUT / AIN");
+                    qActual = 2;
+                }
             default:
                 break;
             }
         i++;
         }
     while(!exit);
-    cout <<endl<<endl<<"Errores: "<< endl;
+    cout <<endl<<endl<<"Resultado: "<< endl;
     //cout <<"Siguiente estado = : "<<estadoActual<< endl;
+    /*if(!stackCharacter->isEmpty()){
+        listError->insertData("Error, falta un '}'");
+    }*/
     if(!listError->isEmpty()) {
         cout <<"-------------Sintáxis inválida----------------"<< endl;
         while(!listError->isEmpty()) {
-			cout <<"Error: "<<listError->dequeue()<< endl;
-			}
+            cout <<"Error: "<<listError->dequeue()<< endl;
+            }
         }
     else {
         cout <<"-------------Sintáxis válida----------------"<< endl;
@@ -650,7 +699,123 @@ int AnalizadorLexico::analizeIF(const std::string& aux, const int& auxInt) {
     }
 
 int AnalizadorLexico::analizeFOR(const std::string& aux, const int& auxInt) {
+    Collection<char>* listCharacter = new Collection<char>;
+    std::string auxError;
+    std::string auxVariable = "";
+    bool exit = false;
+    int qActual = 0;
+    bool bandera = false;
+    int i = auxInt;
+    listCharacter->push('°');
+    do {
+        switch(qActual) {
+            case 0: /// Iniciar FOR con (
+                if(aux[i] == '(') {
+                    qActual = 1;
+                    listCharacter->push(aux[i]);
+                    }
+                else {
+                    auxError = "Falta un '('";
+                    qActual = 7;
+                    }
+                break;
+            case 1: /// Variable inicia con $.
+                if(aux[i] == '$') {
+                    listCharacter->push(aux[i]);
+                    qActual = 2;
+                    }
+                else {
+                    auxError = "La variable debe iniciar con $";
+                    qActual = 7;
+                    }
+                break;
+            case 2: /// Validar nombre de variable
+                if(('A' <= aux[i] && aux[i] <= 'Z') || ('0' <= aux[i] && aux[i] <= '9')) {
+                    listCharacter->push(aux[i]);
+                    auxVariable += aux[i];
+                    qActual = 2;
+                    bandera = true;
+                    }
+                else if(aux[i] == '=' && bandera) { /// isVariable(auxVariable)
+                    listCharacter->push(aux[i]);
+                    qActual = 3;
+                    auxVariable = "";
+                    bandera = false;
+                    }
+                else {
+                    qActual = 7;
+                    auxError = "Operando invalido, 2";
+                    }
+                break;
+            case 3:
+                if('0' <= aux[i] && aux[i] <= '9') {
+                    listCharacter->push(aux[i]);
+                    qActual = 3;
+                    bandera = true;
+                    }
+                else if(aux[i] == ';' && bandera) {
+                    listCharacter->push(aux[i]);
+                    qActual = 4;
+                    bandera = false;
+                    }
+                else {
+                    qActual = 7;
+                    auxError = "Operando invalido, 3";
+                    }
+                break;
+            case 4: // ///////////// Valida las letras despues del operador////////////
+                if(('A' <= aux[i] && aux[i] <= 'Z') || ('0' <= aux[i] && aux[i] <= '9')) {
+                    listCharacter->push(aux[i]);
+                    auxVariable += aux[i];
+                    qActual = 4;
+                    bandera = true;
+                    }
+                else if((aux[i] == '<' || aux[i] == '>' || aux[i] == '&' || aux[i] == '!' || aux[i] == '=' || aux[i] == '|') && (bandera)) {
+                    listCharacter->push(aux[i]);
+                    qActual = 5;
+                    auxVariable = "";
+                    bandera = false;
+                    }
+                else {
+                    qActual = 7;
+                    auxError = "Operando invalido, 4";
+                    }
+                break;
+            case 5: // /////////////// Valida los numeros despues del operador /////////
+                if(('A' <= aux[i] && aux[i] <= 'Z') || ('0' <= aux[i] && aux[i] <= '9')) {
+                    listCharacter->push(aux[i]);
+                    qActual = 5;
+                    bandera = true;
+                    }
+                else if(aux[i] == ')' && bandera) {
+                    listCharacter->push(aux[i]);
+                    auxVariable = "";
+                    qActual = 6;
+                    }
+                else {
+                    qActual = 7;
+                    auxError = "Operando invalido, 5";
+                    }
 
+                break;
+            case 6:
+                cout <<"FOR Válido"<< endl;
+                exit = true;
+                break;
+            case 7:
+                exit = true;
+                listError->insertData("Error, sentencia FOR mal, " + auxError);
+                break;
+            default:
+                break;
+            }
+        i++;
+        }
+    while(!exit);
+    while(!listError->isEmpty()) {
+        cout <<listError->pop()<< endl;
+        }
+    return --i;
     }
 
 int AnalizadorLexico::analizeWHILE(const std::string& aux, const int& auxInt) {
@@ -807,6 +972,20 @@ int AnalizadorLexico::analizeWHILE(const std::string& aux, const int& auxInt) {
             }
         }
     return --i;
+    }
+
+bool AnalizadorLexico::isVariable(std::string& aux ) {
+    bool bandera = false;
+    for(int i = 0; i < aux.size(); i++) {
+        if(('A' <= aux[i] && aux[i] <= 'Z') || ('0' <= aux[i] && aux[i] <= '9')){
+            return false;
+        }
+        if('A' <= aux[i] && aux[i] <= 'Z') {
+            bandera = true;
+            break;
+            }
+        }
+    return bandera;
     }
 
 void AnalizadorLexico::readFromDisk() {

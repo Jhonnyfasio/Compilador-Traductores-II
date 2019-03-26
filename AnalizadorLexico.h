@@ -20,6 +20,7 @@ class AnalizadorLexico{
         int generalQ;
         int estadoActual = 0;
         bool isCorrect = true;
+        bool isVariable(std::string& aux);
         
     public:
         AnalizadorLexico();
