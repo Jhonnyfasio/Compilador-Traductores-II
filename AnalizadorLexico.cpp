@@ -7,7 +7,8 @@
 
 using namespace std;
 
-typedef enum{Q1=1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10,Q11,Q12,Q13,Q14,Q15,Q16,Q17,Q18,Q19,Q20,Q21,Q22,Q23} QAnalize;
+typedef enum{Q0=0,Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10,Q11,Q12,Q13,Q14,Q15,Q16,Q17,Q18,Q19,Q20,Q21,Q22,Q23} QAnalize;
+typedef enum{NULL=0, STRING, CHAR, INT} VariablesTypes;
 
 AnalizadorLexico::AnalizadorLexico() {
     listData = new Collection<Lexico>;
@@ -185,20 +186,20 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
     cout <<"Analizando sintácticamente: '"<<aux<<"'"<< endl;
     do {
         switch(qActual) {
-            case 0:
+            case Q0: /// Estado inicial, ignora todo hasta la llegada de un ;
                 cout <<"Case 0 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
                 if('A' <= aux[i] && aux[i] <= 'Z') {
                     qActual = 0;
                     sentence+=aux[i];
                     }
                 else if(aux[i] == ';') {
-                    qActual = 1;
+                    qActual = Q1;
                     }
                 else {
                     qActual = 0;
                     }
                 break;
-            case 1:
+            case Q1: /// Valida si lo ingresado es un INICIO; indicando la lectura del programa
                 cout <<"Case 1 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
                 cout <<"Sentences = '"<<sentence<<"' "<< endl;
                 if(sentence == "INICIO") {
@@ -212,7 +213,7 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                     }
                 sentence = "";
                 break;
-            case 2:
+            case Q2: /// Estado base, aquí revisa todo lo que llegue para su sintaxis general
                 cout <<"Case 2 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
                 if(aux[i] == '$') {
                     qActual = 3;
@@ -240,9 +241,9 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                     cout <<"Error, sintáxis incorrecta en: '"<<aux[i]<<"'"<< endl;
                     }
                 break;
-            case 3:
+            case Q3: /// Empieza a revisar la declaración de las variables
                 cout <<"Case 3 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
-                if('A' <= aux[i] && aux[i] <= 'Z') {
+                if(('A' <= aux[i] && aux[i] <= 'Z') || ('0' <= aux[i] && aux[i] <= '9')) {
                     qActual = 3;
                     sentence+=aux[i];
                     }
@@ -250,19 +251,32 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                     qActual = 4;
                     }
                 else {
-                    cout <<"Error sintáxis"<< endl;
+                    listError->insertData("Falta un ';'");
                     }
                 break;
-            case 4:
+            case Q4: /// valida e inserta la variable
                 cout <<"Case 4 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
                 qActual = 2;
                 //aux = tool->strToCapLet(sentence);
-                variable.setName(sentence);
-                stackVariable->push(variable);
+                if(isVariable(sentence)){
+					if(!existVariable(sentence)){
+						variable.setName(sentence);
+						variable.setIsUsed(false);
+						variable.setType(0);
+						stackVariable->push(variable);
+					}
+					else{
+						listError->insertData("Error, esta variable ya has ido previamente declarada");
+					}
+                }
+                else{
+					listError->insertData("Error, sintáxis de variable errónea");
+                }
+
                 sentence = "";
                 i--;
                 break;
-            case 5:
+            case Q5: /// Valida si es un FOR, WHILE, IF, END, AOUT, AIN, variableX
                 cout <<"Case 5 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
                 if('A' <= aux[i] && aux[i] <= 'Z') {
                     qActual = 5;
@@ -309,7 +323,7 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                             isCorrect = false;
                             i--;
                             }
-                        
+
                         qActual = 2;
                         }
                     else if(sentence == "END") {
@@ -345,14 +359,14 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                     //cout <<"Yendo a "<<qActual<<" desde 5"<< endl;
                     }
                 break;
-            case 6:
+            case Q6: /// Valida el < después de aout
                 cout <<"Case 6 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
                 if(aux[i] != '<') {
                     listError->insertData("Error, se esperaba un '<' después de 'AOUT'");
                     }
                 qActual = 7;
                 break;
-            case 7:
+            case Q7: /// valida que lleguen un " para salida de texto
                 cout <<"Case 7 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
                 if(aux[i] == '"') {
                     qActual = 8;
@@ -365,7 +379,7 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                 }
                 qActual = 8;
                 break;
-            case 8:
+            case Q8: /// Valida puro texto de salida
                 cout <<"Case 8 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
                 if(aux[i] == '\0') {
                     listError->insertData("Error, se esperaba un '\"' en 'AOUT'");
@@ -379,21 +393,33 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                     qActual = 9;
                     }
                 break;
-            case 9:
+			case Q21:
+                if(isdigit((int)aux[i]) || isalpha((int)aux[i]){
+                    qActual = 21;
+                    }
+                else if(aux[i] == ';'){
+                    qActual = 2;
+                }
+                else{
+                    listError->insertData("Error, se esperaba un ';' en AOUT / AIN");
+                    qActual = 2;
+                }
+                break;
+            case Q9: /// Valida que llege un ; en AOUT
                 cout <<"Case 9 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
                 if(aux[i] != ';') {
                     listError->insertData("Error, se esperaba un ';' en 'AOUT'");
                     }
                 qActual = 2;
                 break;
-            case 10:  /// /////////// Validando el > en AIN //////////////////
+            case Q10:  /// /////////// Validando el > en AIN //////////////////
                 cout <<"Case 10 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
                 if(aux[i] != '>') {
                     listError->insertData("Error, se esperaba un '>' en 'AIN'");
                     }
                 qActual = 11;
                 break;
-            case 11:
+            case Q11:
                 cout <<"Case 11 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
                 if(aux[i] == '"') {
                     qActual = 12;
@@ -409,7 +435,7 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                     qActual = 14;
                     }
                 break;
-            case 12:
+            case Q12:
                 cout <<"Case 12 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
                 if(aux[i] != '"') {
                     sentence+=aux[i];
@@ -424,7 +450,7 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                     qActual = 14;
                     }
                 break;
-            case 13:
+            case Q13:
                 cout <<"Case 13 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
                 if(aux[i] != '\'') {
                     qActual = 13;
@@ -438,14 +464,14 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                     qActual = 14;
                     }
                 break;
-            case 14:
+            case Q14:
                 cout <<"Case 14 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
                 if(aux[i] != ';') {
                     listError->insertData("Error, se esperaba un ';' en 'AIN'");
                     }
                 qActual = 2;
                 break;
-            case 22:
+            case Q22:
                 cout <<"Case 22 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
                 if(isalpha((int)aux[i]) || isdigit((int)aux[i])) {
                     sentence+=aux[i];
@@ -460,7 +486,7 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                     qActual = 14;
                     }
                 break;
-            case 15:
+            case Q15:
                 cout <<"Case 15 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
                 if(aux[i] != '=') {
                     qActual=15;
@@ -475,7 +501,7 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                     sentence="";
                     }
                 break;
-            case 16:
+            case Q16:
                 cout <<"Case 16 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
                 if(aux[i] != '+' && aux[i] != '-' && aux[i] != '/' && aux[i] != '*') {
                     qActual=16;
@@ -490,7 +516,7 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                     sentence="";
                     }
                 break;
-            case 17:
+            case Q17:
                 cout <<"Case 17 con '"<<aux[i]<<"' '"<<(int)aux[i]<<"' llegando"<< endl;
                 if(aux[i] != ';') {
                     qActual=17;
@@ -504,22 +530,11 @@ void AnalizadorLexico::analizeGeneral(std::string& aux) {
                         }
                     sentence="";
                     }
-            case 20:  /// De error
+            case Q20:  /// De error
                 cout <<"Case 20 con '"<<aux[i]<<"' llegando"<< endl;
                 exit = true;
                 cout <<"Error, : "<< endl;
                 break;
-            case 21:
-                if(isdigit((int)aux[i])){
-                    qActual = 21;
-                    }
-                else if(aux[i] == ';'){
-                    qActual = 2;
-                }
-                else{
-                    listError->insertData("Error, se esperaba un ';' en AOUT / AIN");
-                    qActual = 2;
-                }
             default:
                 break;
             }
@@ -973,6 +988,15 @@ int AnalizadorLexico::analizeWHILE(const std::string& aux, const int& auxInt) {
         }
     return --i;
     }
+
+bool AnalizadorLexico::existVariable(std::string& aux){
+	Lexico lexic;
+	lexic.setName(aux);
+	if(listData->findData(lexic) != nullptr){
+		return true;
+		}
+	return false;
+	}
 
 bool AnalizadorLexico::isVariable(std::string& aux ) {
     bool bandera = false;

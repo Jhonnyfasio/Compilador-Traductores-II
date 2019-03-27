@@ -21,22 +21,23 @@ class AnalizadorLexico{
         int estadoActual = 0;
         bool isCorrect = true;
         bool isVariable(std::string& aux);
-        
+
     public:
         AnalizadorLexico();
         std::string getStringToAnalize();
-        
+
         void setStringToAnalize(std::string& aux);
-        
+
         void receiveString();
         void analizeString();
         void analizeSintaticString();
+        bool existVariable(std::string& aux);
         void analizeGeneral(std::string& aux);
         int analizeIF(const std::string& aux, const int& auxInt);
         int analizeFOR(const std::string& aux, const int& auxInt);
         int analizeWHILE(const std::string& aux, const int& auxInt);
         void analizeToken(const std::string& aux);
-        
+
         void readFromDisk();
 };
 

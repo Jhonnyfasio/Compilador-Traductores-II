@@ -1,7 +1,7 @@
 #include "variable.h"
 
 using namespace std;
- 
+
 int Variable::getId() {
     return id;
     }
@@ -18,6 +18,10 @@ int Variable::getType(){
     return type;
     }
 
+bool Variable::getIsUsed() {
+	return isUsed;
+}
+
 void Variable::setId(const int& idL) {
     id = idL;
     }
@@ -33,6 +37,11 @@ void Variable::setDescription(string& descriptionL) {
 void Variable::setType(const int& typeX){
     type = typeX;
     }
+
+void Variable::setIsUsed(const bool isUsedX)
+{
+	isUsed = isUsedX;
+}
 
 string Variable::toString() {
     /// Pendiente
