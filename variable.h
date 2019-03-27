@@ -9,8 +9,8 @@ class Variable {
         int id;
         std::string name;
         std::string description;
-        int type;
-        bool isUsed;
+        int type = 0;
+        bool isUsed = false;
 
     public:
         int getId();

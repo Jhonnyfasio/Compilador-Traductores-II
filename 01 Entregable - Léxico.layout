@@ -1,23 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="AnalizadorLexico.cpp" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
+	<File name="AnalizadorLexico.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="17376" topLine="260" />
+			<Cursor1 position="18464" topLine="272" />
 		</Cursor>
 		<Folding>
-			<Collapse line="29" />
-			<Collapse line="559" />
-			<Collapse line="715" />
-			<Collapse line="835" />
-			<Collapse line="1000" />
-			<Collapse line="1014" />
+			<Collapse line="13" />
+			<Collapse line="19" />
+			<Collapse line="23" />
+			<Collapse line="27" />
+			<Collapse line="31" />
+			<Collapse line="614" />
+			<Collapse line="770" />
+			<Collapse line="890" />
+			<Collapse line="1046" />
+			<Collapse line="1055" />
 		</Folding>
 	</File>
-	<File name="AnalizadorLexico.h" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="variable.h" open="1" top="1" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="899" topLine="5" />
+			<Cursor1 position="264" topLine="6" />
 		</Cursor>
 	</File>
 	<File name="main.cpp" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -30,9 +33,9 @@
 			<Cursor1 position="670" topLine="10" />
 		</Cursor>
 	</File>
-	<File name="variable.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="AnalizadorLexico.h" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="626" topLine="0" />
+			<Cursor1 position="1313" topLine="18" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

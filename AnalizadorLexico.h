@@ -13,6 +13,7 @@ class AnalizadorLexico{
         Tools* tool;
         Collection<Lexico>* listData;
         Collection<std::string>* listError;
+        Collection<Variable>* stackVariable;
         std::string stringToAnalize;
         std::string finalString;
         std::string generalReport = "";

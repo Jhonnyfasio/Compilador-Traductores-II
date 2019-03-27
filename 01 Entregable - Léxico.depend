@@ -98,7 +98,7 @@
 	<iostream>
 	"AnalizadorLexico.h"
 
-1551336677 c:\users\juan9\onedrive\documentos\github\compilador-traductores-ii\analizadorlexico.h
+1553702872 c:\users\juan9\onedrive\documentos\github\compilador-traductores-ii\analizadorlexico.h
 	<iostream>
 	<fstream>
 	"collection.h"
@@ -116,14 +116,14 @@
 	<cstdlib>
 	<cstring>
 
-1553526772 c:\users\juan9\onedrive\documentos\github\compilador-traductores-ii\variable.h
+1553702225 c:\users\juan9\onedrive\documentos\github\compilador-traductores-ii\variable.h
 	<iostream>
 	<cstring>
 
 1526933374 source:c:\users\juan9\onedrive\documentos\github\compilador-traductores-ii\tools.cpp
 	"Tools.h"
 
-1553526816 source:c:\users\juan9\onedrive\documentos\github\compilador-traductores-ii\variable.cpp
+1553702225 source:c:\users\juan9\onedrive\documentos\github\compilador-traductores-ii\variable.cpp
 	"variable.h"
 
 1551368289 source:c:\users\juan9\onedrive\documentos\github\compilador-traductores-ii\analizadorlexico.cpp
