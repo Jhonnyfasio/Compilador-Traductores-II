@@ -43,7 +43,7 @@
 1551249182 source:c:\users\juan9\desktop\tareas inco pc\6to semestre\03 estructura de datos ii\01 entregable - léxico\variable.cpp
 	"variable.h"
 
-1553642560 source:c:\users\juan balderrama\desktop\01 entregable - léxico\compilador-traductores-ii\lexico.cpp
+1553731506 source:c:\users\juan balderrama\desktop\01 entregable - léxico\compilador-traductores-ii\lexico.cpp
 	"lexico.h"
 
 1553642560 c:\users\juan balderrama\desktop\01 entregable - léxico\compilador-traductores-ii\lexico.h
@@ -54,7 +54,7 @@
 	<iostream>
 	"AnalizadorLexico.h"
 
-1553642560 c:\users\juan balderrama\desktop\01 entregable - léxico\compilador-traductores-ii\analizadorlexico.h
+1553738245 c:\users\juan balderrama\desktop\01 entregable - léxico\compilador-traductores-ii\analizadorlexico.h
 	<iostream>
 	<fstream>
 	"collection.h"
@@ -72,17 +72,17 @@
 	<cstdlib>
 	<cstring>
 
-1553642561 c:\users\juan balderrama\desktop\01 entregable - léxico\compilador-traductores-ii\variable.h
+1553724752 c:\users\juan balderrama\desktop\01 entregable - léxico\compilador-traductores-ii\variable.h
 	<iostream>
 	<cstring>
 
 1553642560 source:c:\users\juan balderrama\desktop\01 entregable - léxico\compilador-traductores-ii\tools.cpp
 	"Tools.h"
 
-1553642561 source:c:\users\juan balderrama\desktop\01 entregable - léxico\compilador-traductores-ii\variable.cpp
+1553649825 source:c:\users\juan balderrama\desktop\01 entregable - léxico\compilador-traductores-ii\variable.cpp
 	"variable.h"
 
-1553642560 source:c:\users\juan balderrama\desktop\01 entregable - léxico\compilador-traductores-ii\analizadorlexico.cpp
+1553743115 source:c:\users\juan balderrama\desktop\01 entregable - léxico\compilador-traductores-ii\analizadorlexico.cpp
 	<cstring>
 	"AnalizadorLexico.h"
 	"regex"

@@ -13,7 +13,9 @@ class AnalizadorLexico{
         Tools* tool;
         Collection<Lexico>* listData;
         Collection<std::string>* listError;
+        Collection<std::string>* listWarning;
         Collection<Variable>* stackVariable;
+        Collection<int>* listVariableType;
         std::string stringToAnalize;
         std::string finalString;
         std::string generalReport = "";
@@ -38,7 +40,7 @@ class AnalizadorLexico{
         int analizeFOR(const std::string& aux, const int& auxInt);
         int analizeWHILE(const std::string& aux, const int& auxInt);
         void analizeToken(const std::string& aux);
-
+        bool validOnlyNumber(const std::string& aux);
         void readFromDisk();
 };
 

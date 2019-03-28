@@ -1,7 +1,7 @@
 #include "lexico.h"
 
 using namespace std;
- 
+
 int Lexico::getId() {
     return id;
     }
@@ -28,4 +28,5 @@ void Lexico::setDescription(string& descriptionL) {
 
 string Lexico::toString() {
     /// Pendiente
+    return "algo";
     }
